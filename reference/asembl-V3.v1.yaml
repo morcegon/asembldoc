@@ -332,6 +332,103 @@ paths:
           in: header
           name: AccessToken
           required: true
+  '/user/{id}/event/{type}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+          enum:
+            - going
+            - went
+        name: type
+        in: path
+        required: true
+    get:
+      summary: User events
+      tags: []
+      responses: {}
+      operationId: get-user-id-event-type
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AcessToken
+          required: true
+      description: "Return paginated user's going or went events"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: boolean
+                message:
+                  type: string
+                data:
+                  type: object
+                  properties:
+                    events:
+                      type: object
+                      properties:
+                        total:
+                          type: integer
+                        per_page:
+                          type: integer
+                        current_page:
+                          type: integer
+                        last_page:
+                          type: integer
+                        next_page_url:
+                          type: string
+                        prev_page_url:
+                          type: string
+                        from:
+                          type: integer
+                        to:
+                          type: integer
+                        data:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: integer
+                              title:
+                                type: string
+                              starting_utc_date_time:
+                                type: string
+                              image:
+                                type: string
+            examples:
+              Sucess example:
+                value:
+                  status: true
+                  message: User events
+                  data:
+                    events:
+                      total: 500
+                      per_page: 20
+                      current_page: 2
+                      last_page: 25
+                      next_page_url: 'http://localhost/api/v3/user/129/event/went?page=3'
+                      prev_page_url: 'http://localhost/api/v3/user/129/event/went?page=1'
+                      from: 21
+                      to: 40
+                      data:
+                        - id: 7157
+                          title: Laurin Talese
+                          starting_utc_date_time: '2020-02-20 00:00:00'
+                          image: /files/event_images/t_716520200121074423.jpg
+                        - id: 7224
+                          title: Global Connection Night February 2020
+                          starting_utc_date_time: '2020-02-20 02:00:00'
+                          image: /files/event_images/t_181520200125123959.jpg
+        description: Paginated result
 components:
   schemas:
     categories:
