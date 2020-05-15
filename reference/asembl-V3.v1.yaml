@@ -6,8 +6,6 @@ info:
 servers:
   - url: 'https://appstage.asemblco.com/api/v3/'
     description: stage
-  - url: 'https://app.asemblco.com'
-    description: production
 paths:
   '/user/{id}/categories':
     parameters:
@@ -112,8 +110,107 @@ paths:
               example-1: {}
         description: ''
       description: ''
+  '/events/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Events details
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  descriptions:
+                    type: string
+                  entry_fee:
+                    type: string
+                  event_url:
+                    type: string
+                  image:
+                    type: string
+                    description: Absolute path of main image
+                  dates:
+                    type: object
+                    properties:
+                      calendar_date:
+                        type: string
+                        description: Date in format yyyy-mm-dd
+                        format: date
+                      start_date:
+                        type: string
+                        description: 'date time format yyyy-mm-dd HH:mm:ss'
+                        format: date-time
+                      finish_date:
+                        type: string
+                        description: 'date time format yyyy-mm-dd HH:mm:ss'
+                        format: date-time
+                  address:
+                    type: object
+                    properties:
+                      street_address:
+                        type: string
+                      city:
+                        type: string
+                      state:
+                        type: string
+                      post_code:
+                        type: string
+                      lat:
+                        type: string
+                      lng:
+                        type: string
+                  owner:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      thumb_image_path:
+                        type: string
+                        description: Absolute path
+                  categories:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        parent_id:
+                          type: integer
+                        name:
+                          type: string
+                  event_attending_status:
+                    type: string
+                    description: Only returnet if user is logged
+      operationId: get-events-id
+      description: Return events details
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AccessToken
+          description: Logged user token
 components:
   schemas:
+    categories:
+      title: categories
+      type: object
+      properties:
+        id:
+          type: string
     Error:
       title: Error
       type: object
@@ -126,10 +223,4 @@ components:
             - array
           items: {}
       description: Default error
-    categories:
-      title: categories
-      type: object
-      properties:
-        id:
-          type: string
   securitySchemes: {}
