@@ -4,7 +4,7 @@ info:
   version: '3.0'
   description: ''
 servers:
-  - url: 'https://appstage.asemblco.com/api/v3/'
+  - url: 'https://appstage.asemblco.com/api/v3'
     description: stage
 paths:
   '/user/{id}/categories':
@@ -15,7 +15,7 @@ paths:
         in: path
         required: true
     put:
-      summary: ''
+      summary: User categories
       operationId: put-user-id-categories
       responses:
         '200':
@@ -110,7 +110,7 @@ paths:
               example-1: {}
         description: ''
       description: ''
-  '/events/{id}':
+  '/event/{id}':
     parameters:
       - schema:
           type: string
@@ -118,7 +118,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Events details
+      summary: Event details
       tags: []
       responses:
         '200':
@@ -203,6 +203,135 @@ paths:
           in: header
           name: AccessToken
           description: Logged user token
+  '/event/{id}/guest':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Event guests
+      tags: []
+      responses: {}
+      operationId: get-event-id-guest
+      description: Return five guests with name and thumb and a total event guests count.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                total_guests:
+                  type: string
+                users_guests:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      thumb_image_path:
+                        type: string
+  /event:
+    post:
+      summary: Event store
+      operationId: post-event
+      responses:
+        '200':
+          description: OK
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/categories'
+                  image:
+                    type: string
+                    description: 'image type. only jpg, jpeg and png files. 10mb maximum'
+                  title:
+                    type: string
+                  address:
+                    type: string
+                  city:
+                    type: string
+                  state:
+                    type: string
+                  lat:
+                    type:
+                      - number
+                      - string
+                  lng:
+                    type:
+                      - number
+                      - string
+                  post_code:
+                    type: string
+                    maxLength: 50
+                    minLength: 1
+                  description:
+                    type: string
+                  entry_fee:
+                    type: number
+                  event_url:
+                    type: string
+                    description: needs the http protocol
+                  starting_utc_date_time:
+                    type: string
+                    format: date-time
+                  end_utc_date_time:
+                    type: string
+                    format: date-time
+                  age_group:
+                    type: string
+                    description: ''
+                    example: 0-100
+                  genders:
+                    type: array
+                    description: 'm, f or nb'
+                    items:
+                      type: string
+                      enum:
+                        - m
+                        - f
+                        - nb
+                  invitation_to:
+                    type: integer
+                    minimum: 1
+                    maximum: 5
+                  groups:
+                    type: array
+                    uniqueItems: false
+                    description: Array of selected groups. Is required if invite to is 5
+                    items:
+                      type: integer
+                  contacts:
+                    type: array
+                    description: Required if invite_to is 2.
+                    items:
+                      type: integer
+                required:
+                  - categories
+                  - title
+                  - address
+                  - lat
+                  - lng
+                  - starting_utc_date_time
+                  - age_group
+                  - genders
+                  - invitation_to
+      description: Add new event
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AccessToken
+          required: true
 components:
   schemas:
     categories:
@@ -211,6 +340,12 @@ components:
       properties:
         id:
           type: string
+          description: parent id
+        children:
+          type: array
+          description: "children's id array"
+          items:
+            type: integer
     Error:
       title: Error
       type: object
