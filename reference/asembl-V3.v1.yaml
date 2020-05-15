@@ -1,0 +1,135 @@
+openapi: 3.0.0
+info:
+  title: asembl-v3
+  version: '3.0'
+  description: ''
+servers:
+  - url: 'https://appstage.asemblco.com/api/v3/'
+    description: stage
+  - url: 'https://app.asemblco.com'
+    description: production
+paths:
+  '/user/{id}/categories':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    put:
+      summary: ''
+      operationId: put-user-id-categories
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: number
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        priority:
+                          type: number
+                        main_image_path:
+                          type: string
+                          description: image relative path
+                        thumb_image_path:
+                          type: string
+                          description: thumb relative path
+                        sub_category_list:
+                          type:
+                            - string
+                            - array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: number
+                              name:
+                                type: string
+                              description:
+                                type: string
+                              priority:
+                                type: number
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AccessToken
+          required: true
+          description: Logged user access token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              description: |
+                Categories
+              properties:
+                categories:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: number
+                        description: parent category id
+                      sub_category_list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: number
+                              description: child category id
+                          required:
+                            - id
+                    required:
+                      - id
+              required:
+                - categories
+            examples:
+              example-1: {}
+        description: ''
+      description: ''
+components:
+  schemas:
+    Error:
+      title: Error
+      type: object
+      properties:
+        status:
+          type: boolean
+        error:
+          type:
+            - string
+            - array
+          items: {}
+      description: Default error
+    categories:
+      title: categories
+      type: object
+      properties:
+        id:
+          type: string
+  securitySchemes: {}
