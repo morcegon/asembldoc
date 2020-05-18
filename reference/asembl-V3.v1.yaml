@@ -203,6 +203,40 @@ paths:
           in: header
           name: AccessToken
           description: Logged user token
+    put:
+      summary: ''
+      operationId: put-event-id
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      event:
+                        type: object
+      description: Edit event
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AccessToken
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eventData'
+        description: ''
   '/event/{id}/guest':
     parameters:
       - schema:
@@ -247,84 +281,15 @@ paths:
               schema:
                 type: object
                 properties:
-                  categories:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/categories'
-                  image:
+                  status:
+                    type: boolean
+                  message:
                     type: string
-                    description: 'image type. only jpg, jpeg and png files. 10mb maximum'
-                  title:
-                    type: string
-                  address:
-                    type: string
-                  city:
-                    type: string
-                  state:
-                    type: string
-                  lat:
-                    type:
-                      - number
-                      - string
-                  lng:
-                    type:
-                      - number
-                      - string
-                  post_code:
-                    type: string
-                    maxLength: 50
-                    minLength: 1
-                  description:
-                    type: string
-                  entry_fee:
-                    type: number
-                  event_url:
-                    type: string
-                    description: needs the http protocol
-                  starting_utc_date_time:
-                    type: string
-                    format: date-time
-                  end_utc_date_time:
-                    type: string
-                    format: date-time
-                  age_group:
-                    type: string
-                    description: ''
-                    example: 0-100
-                  genders:
-                    type: array
-                    description: 'm, f or nb'
-                    items:
-                      type: string
-                      enum:
-                        - m
-                        - f
-                        - nb
-                  invitation_to:
-                    type: integer
-                    minimum: 1
-                    maximum: 5
-                  groups:
-                    type: array
-                    uniqueItems: false
-                    description: Array of selected groups. Is required if invite to is 5
-                    items:
-                      type: integer
-                  contacts:
-                    type: array
-                    description: Required if invite_to is 2.
-                    items:
-                      type: integer
-                required:
-                  - categories
-                  - title
-                  - address
-                  - lat
-                  - lng
-                  - starting_utc_date_time
-                  - age_group
-                  - genders
-                  - invitation_to
+                  data:
+                    type: object
+                    properties:
+                      event:
+                        type: object
       description: Add new event
       parameters:
         - schema:
@@ -332,6 +297,11 @@ paths:
           in: header
           name: AccessToken
           required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eventData'
   '/user/{id}/event/{type}':
     parameters:
       - schema:
@@ -455,4 +425,110 @@ components:
             - array
           items: {}
       description: Default error
+    eventData:
+      title: eventData
+      type: object
+      description: Event data
+      properties:
+        categories:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: parent id
+              children:
+                type: array
+                description: children id
+                items:
+                  type: integer
+            required:
+              - id
+        file:
+          type: string
+          description: multipart file
+        title:
+          type: string
+          maxLength: 250
+          minLength: 3
+        address:
+          type: string
+          minLength: 3
+          maxLength: 250
+        city:
+          type: string
+          minLength: 3
+          maxLength: 250
+        state:
+          type: string
+          minLength: 1
+          maxLength: 250
+        lat:
+          type: string
+          minLength: 4
+          maxLength: 250
+        lng:
+          type: string
+          minLength: 4
+          maxLength: 250
+        post_code:
+          type: string
+          minLength: 1
+          maxLength: 50
+        description:
+          type: string
+          minLength: 3
+        entry_fee:
+          type: number
+        event_url:
+          type: string
+          description: 'with protocol (http:// or https://)'
+        starting_utc_date_time:
+          type: string
+          example: '2020-05-18 12:45:56'
+        end_utc_date_time:
+          type: string
+          example: '2020-05-18 12:45:56'
+        age_group:
+          type: string
+          example: 0-100
+          minLength: 3
+        genders:
+          type: array
+          minItems: 1
+          maxItems: 3
+          items:
+            type: string
+            enum:
+              - m
+              - f
+              - nb
+        invitation_to:
+          type: integer
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+            - 5
+        groups:
+          type: array
+          description: selected groups id
+          items:
+            type: integer
+        contacts:
+          type: array
+          description: selected friends id
+          items:
+            type: integer
+      required:
+        - title
+        - address
+        - lat
+        - lng
+        - starting_utc_date_time
+        - age_group
+        - genders
+        - invitation_to
   securitySchemes: {}
