@@ -204,7 +204,7 @@ paths:
           name: AccessToken
           description: Logged user token
     put:
-      summary: ''
+      summary: Event update
       operationId: put-event-id
       responses:
         '200':
@@ -399,6 +399,62 @@ paths:
                           starting_utc_date_time: '2020-02-20 02:00:00'
                           image: /files/event_images/t_181520200125123959.jpg
         description: Paginated result
+  '/event/{id}/category':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    put:
+      summary: ''
+      operationId: put-event-id-category
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type:
+                      - string
+                      - object
+                    properties:
+                      categories:
+                        type: string
+      description: "Update an event categories. \nThe old categories will be removed and only the sended in this request will be used."
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AccessToken
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                categories:
+                  $ref: '#/components/schemas/categoryData'
+              required:
+                - categories
+            examples:
+              Default request:
+                value:
+                  categories:
+                    - id: 1
+                      children:
+                        - 12
+                        - 13
+                        - 14
+        description: ''
 components:
   schemas:
     categories:
@@ -432,6 +488,7 @@ components:
       properties:
         categories:
           type: array
+          description: Not required in PUT method
           items:
             type: object
             properties:
@@ -522,6 +579,23 @@ components:
           description: selected friends id
           items:
             type: integer
+        event_type:
+          type: integer
+          enum:
+            - 1
+            - 2
+        is_shareable:
+          type: boolean
+        guests:
+          type: number
+        venue_name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - m
+            - f
+            - nb
       required:
         - title
         - address
@@ -531,4 +605,21 @@ components:
         - age_group
         - genders
         - invitation_to
+        - event_type
+    categoryData:
+      title: categoryData
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: integer
+            description: The parent category id
+          children:
+            type: array
+            description: Onlyt the children categories ID
+            items:
+              type: integer
+        required:
+          - id
   securitySchemes: {}
