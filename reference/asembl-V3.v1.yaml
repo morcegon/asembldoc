@@ -602,6 +602,54 @@ paths:
                 - dob
                 - account_type
                 - gender
+  '/user/{id}/image/{type}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+          enum:
+            - profile
+            - cover
+        name: type
+        in: path
+        required: true
+    put:
+      summary: ''
+      operationId: put-user-id-image
+      responses:
+        '200':
+          description: OK
+      description: |-
+        Update and delete user images.
+        The image order is the same of images array.
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AccessToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                images:
+                  type: array
+                  description: All user images. Accespts image or id.
+                  items:
+                    type:
+                      - string
+                      - integer
+                delete:
+                  type: array
+                  items:
+                    type: integer
+              required:
+                - images
 components:
   schemas:
     categories:
