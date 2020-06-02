@@ -697,9 +697,9 @@ components:
                   type: integer
             required:
               - id
-        file:
+        image:
           type: string
-          description: multipart file
+          description: Image as file type. If null was invited the previous is deleted.
         title:
           type: string
           maxLength: 250
