@@ -568,6 +568,8 @@ paths:
             schema:
               type: object
               properties:
+                categories:
+                  $ref: '#/components/schemas/categoryData'
                 first_name:
                   type: string
                 last_name:
@@ -596,8 +598,6 @@ paths:
                   type: string
                   minLength: 6
                   maxLength: 30
-                categories:
-                  $ref: '#/components/schemas/categoryData'
               required:
                 - first_name
                 - last_name
@@ -652,6 +652,25 @@ paths:
                     type: integer
               required:
                 - images
+  '/user/{id}/friend':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-user-id-friend
+      description: "Return a user's friend list"
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: q
+          description: Keyword
 components:
   schemas:
     categories:
