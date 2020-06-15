@@ -604,6 +604,19 @@ paths:
                 - dob
                 - account_type
                 - gender
+    get:
+      summary: ''
+      operationId: get-user-id
+      responses:
+        '200':
+          description: OK
+      description: User details
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: AccessToken
+          required: true
   '/user/{id}/image/{type}':
     parameters:
       - schema:
