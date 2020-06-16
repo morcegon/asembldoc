@@ -407,7 +407,7 @@ paths:
         in: path
         required: true
     put:
-      summary: ''
+      summary: Event update categories
       operationId: put-event-id-category
       responses:
         '200':
@@ -457,7 +457,7 @@ paths:
         description: ''
   /user:
     post:
-      summary: ''
+      summary: User signup
       operationId: post-user
       responses:
         '200':
@@ -546,7 +546,7 @@ paths:
         in: path
         required: true
     put:
-      summary: ''
+      summary: User update
       operationId: put-user-id
       responses:
         '200':
@@ -605,7 +605,7 @@ paths:
                 - account_type
                 - gender
     get:
-      summary: ''
+      summary: User details
       operationId: get-user-id
       responses:
         '200':
@@ -633,7 +633,7 @@ paths:
         in: path
         required: true
     put:
-      summary: ''
+      summary: User image
       operationId: put-user-id-image
       responses:
         '200':
@@ -673,7 +673,7 @@ paths:
         in: path
         required: true
     get:
-      summary: Your GET endpoint
+      summary: User friends
       tags: []
       responses: {}
       operationId: get-user-id-friend
@@ -684,6 +684,43 @@ paths:
           in: query
           name: q
           description: Keyword
+  '/event/{type}':
+    parameters:
+      - schema:
+          type: string
+          enum:
+            - online
+            - presential
+        name: type
+        in: path
+        required: true
+    get:
+      summary: Event by type
+      tags: []
+      responses: {}
+      operationId: get-event-type
+      description: Return a paginated list with events by type
+      parameters:
+        - schema:
+            type: string
+            enum:
+              - all
+              - today
+              - week
+          in: query
+          name: event_display
+        - schema:
+            type: number
+            enum:
+              - 0
+              - 1
+              - 2
+          in: query
+          name: whose_going
+        - schema:
+            type: number
+          in: query
+          name: page
 components:
   schemas:
     categories:
